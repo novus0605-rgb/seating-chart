@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Annie & Bruce Wedding — Seating Chart</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Georgia', serif; background: #faf8f5; color: #3a3228; height: 100vh; display: flex; flex-direction: column; }
+
+header { background: #3a3228; color: #f5efe6; text-align: center; padding: 14px 20px; font-size: 18px; letter-spacing: 3px; text-transform: uppercase; flex-shrink: 0; }
+header span { font-size: 11px; opacity: 0.6; display: block; letter-spacing: 4px; margin-top: 3px; }
+
+.layout { display: flex; flex: 1; overflow: hidden; }
+
+/* LEFT */
+.sidebar { width: 250px; min-width: 220px; background: #fff; border-right: 1px solid #e8e0d5; display: flex; flex-direction: column; overflow: hidden; }
+.sidebar-top { padding: 12px 14px 8px; border-bottom: 1px solid #e8e0d5; flex-shrink: 0; }
+.sidebar-top h3 { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #8b7355; margin-bottom: 8px; }
+#search { width: 100%; border: 1px solid #ddd; border-radius: 4px; padding: 6px 10px; font-size: 13px; background: #faf8f5; color: #3a3228; outline: none; }
+#search:focus { border-color: #c4a882; }
+.guest-list { overflow-y: auto; flex: 1; padding: 4px 0 16px; }
+
+.table-group { margin-bottom: 2px; }
+.table-group-label {
+  padding: 8px 10px 5px 14px;
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: #c4a882; font-weight: bold;
+  display: flex; align-items: center; gap: 6px; cursor: pointer;
+}
+.table-group-label:hover { color: #8b7355; }
+.table-group-label .lbl-main { flex: 1; }
+.lock-btn {
+  background: none; border: 1px solid #ddd; border-radius: 4px;
+  padding: 2px 6px; font-size: 11px; cursor: pointer; color: #bbb;
+  transition: all 0.15s; flex-shrink: 0;
+}
+.lock-btn:hover { border-color: #c4a882; color: #8b7355; }
+.lock-btn.locked { background: #3a3228; border-color: #3a3228; color: #f5efe6; }
+
+.guest-item {
+  padding: 5px 12px 5px 20px;
+  font-size: 13px; cursor: grab;
+  border-left: 3px solid transparent;
+  display: flex; align-items: center; gap: 6px;
+  transition: background 0.12s;
+  user-select: none;
+}
+.guest-item:active { cursor: grabbing; }
+.guest-item:hover { background: #faf0e6; }
+.guest-item.active { background: #f5e9d8; border-left-color: #c4a882; }
+.guest-item.drag-over { border-top: 2px solid #c4a882; }
+.guest-item.dragging { opacity: 0.35; }
+.guest-item .seat-num { font-size: 10px; color: #bbb; min-width: 30px; }
+.restriction-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: #e0a882; }
+.no-dot { width: 7px; flex-shrink: 0; }
+.locked-group .guest-item { cursor: default; }
+
+/* CENTER */
+.floorplan { flex: 1; overflow: auto; padding: 24px 16px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.floorplan-title { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #aaa; }
+.floor-svg { max-width: 660px; width: 100%; }
+.tbl-rect { cursor: pointer; }
+.tbl-rect rect.main { transition: fill 0.2s; }
+.tbl-rect:hover rect.main { fill: #e8d5bc; }
+.tbl-num { font-family: Georgia, serif; font-size: 18px; fill: #8b7355; text-anchor: middle; dominant-baseline: middle; font-weight: bold; }
+.tbl-count { font-family: Arial, sans-serif; font-size: 11px; fill: #aaa; text-anchor: middle; dominant-baseline: middle; }
+.tbl-label { font-family: Georgia, serif; font-size: 11px; fill: #8b7355; text-anchor: middle; }
+
+/* ROSTER (far left) */
+.roster { width: 155px; min-width: 130px; background: #fdf9f5; border-right: 1px solid #e8e0d5; display: flex; flex-direction: column; overflow: hidden; }
+.roster-top { padding: 10px 10px 8px; border-bottom: 1px solid #e8e0d5; flex-shrink: 0; }
+.roster-top h3 { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #8b7355; margin-bottom: 7px; }
+.roster-add { display: flex; gap: 4px; }
+.roster-add input { flex: 1; min-width: 0; border: 1px solid #ddd; border-radius: 3px; padding: 4px 6px; font-size: 11px; background: #fff; outline: none; }
+.roster-add input:focus { border-color: #c4a882; }
+.roster-add button { background: #c4a882; border: none; border-radius: 3px; color: #fff; font-size: 16px; line-height: 1; padding: 3px 7px; cursor: pointer; flex-shrink: 0; }
+.roster-list { overflow-y: auto; flex: 1; padding: 4px 0 16px; }
+.roster-item { display: flex; align-items: center; padding: 4px 6px 4px 10px; font-size: 11px; color: #3a3228; gap: 4px; }
+.roster-item:hover { background: #faf0e6; }
+.roster-item .rname { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.roster-item .tbl-badge { font-size: 9px; color: #bbb; background: #f0ece8; padding: 1px 5px; border-radius: 8px; flex-shrink: 0; }
+.roster-item .del-btn { background: none; border: none; color: #ddd; cursor: pointer; font-size: 13px; padding: 0 2px; line-height: 1; flex-shrink: 0; }
+.roster-item .del-btn:hover { color: #c07070; }
+.roster-item.unassigned .rname { color: #bbb; font-style: italic; }
+.table-group-label.drag-over { background: #f5e9d8; border-radius: 4px; }
+
+/* RIGHT */
+.detail-panel { width: 320px; min-width: 280px; background: #fff; border-left: 1px solid #e8e0d5; display: flex; flex-direction: column; overflow: hidden; }
+.panel-header { padding: 14px 18px 10px; border-bottom: 1px solid #e8e0d5; flex-shrink: 0; background: #faf8f5; }
+.panel-header h2 { font-size: 18px; color: #3a3228; }
+.panel-header .meta { font-size: 11px; color: #aaa; letter-spacing: 1px; margin-top: 3px; }
+.panel-empty { display: flex; align-items: center; justify-content: center; height: 100%; color: #ccc; font-size: 13px; text-align: center; padding: 40px; }
+.panel-scroll { overflow-y: auto; flex: 1; }
+
+/* Section dividers */
+.section-title {
+  padding: 10px 18px 6px;
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: #c4a882; font-weight: bold;
+  border-bottom: 1px solid #f0e8db;
+  background: #fdf9f5;
+  position: sticky; top: 0; z-index: 1;
+}
+
+/* Guest rows (top half) */
+.guest-row {
+  padding: 8px 18px;
+  border-bottom: 1px solid #f5f0ea;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px;
+}
+.guest-row .gname { flex: 1; font-weight: bold; color: #3a3228; }
+.guest-row .room-tag { font-size: 10px; color: #aaa; background: #f3ede6; padding: 2px 7px; border-radius: 10px; flex-shrink: 0; }
+.guest-row .order-tick { font-size: 14px; flex-shrink: 0; }
+.guest-row .order-tick.has { color: #7ab87a; }
+.guest-row .order-tick.none { color: #ddd; }
+.diet-badge { font-size: 10px; color: #c06020; background: #fff0e0; padding: 2px 7px; border-radius: 10px; flex-shrink: 0; }
+
+/* Food order rows (bottom half) */
+.food-card { padding: 10px 18px; border-bottom: 1px solid #f5f0ea; }
+.food-card .fname { font-size: 13px; font-weight: bold; color: #3a3228; margin-bottom: 5px; }
+.food-row { display: flex; gap: 8px; align-items: flex-start; font-size: 12px; margin-top: 3px; }
+.food-cat { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #c4a882; min-width: 70px; flex-shrink: 0; padding-top: 1px; }
+.food-val { color: #555; }
+</style>
+</head>
+<body>
+
+<header>
+  Annie &amp; Bruce
+  <span>8 May 2026 · El Nido · Piece of Sky</span>
+</header>
+
+<div class="layout">
+
+  <!-- ROSTER (far left) -->
+  <div class="roster">
+    <div class="roster-top">
+      <h3>All Guests</h3>
+      <div class="roster-add">
+        <input id="rosterInput" type="text" placeholder="New name…">
+        <button onclick="addRosterGuest()">+</button>
+      </div>
+    </div>
+    <div class="roster-list" id="rosterList"></div>
+  </div>
+
+  <!-- LEFT -->
+  <div class="sidebar">
+    <div class="sidebar-top">
+      <h3>Guest List</h3>
+      <input id="search" type="text" placeholder="Search name…">
+    </div>
+    <div class="guest-list" id="guestList"></div>
+  </div>
+
+  <!-- CENTER -->
+  <div class="floorplan">
+    <div class="floorplan-title">Dinner Seating · 8 May 2026</div>
+    <svg class="floor-svg" viewBox="0 0 700 500" id="floorSvg">
+      <rect width="700" height="500" rx="8" fill="#f7f3ee" stroke="#e0d5c5" stroke-width="1"/>
+
+      <!-- Bar (bottom right, non-clickable) -->
+      <rect x="415" y="288" width="262" height="180" rx="6" fill="#3a3228" opacity="0.08" stroke="#c4a882" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <text x="546" y="382" font-family="Georgia" font-size="14" fill="#8b7355" text-anchor="middle" letter-spacing="4">BAR</text>
+
+      <!-- Table 1 · top right · 8 pax -->
+      <g class="tbl-rect" id="tbl-1" onclick="selectTable(1)">
+        <rect class="main" x="503" y="18" width="158" height="52" rx="4" fill="#f0e8db" stroke="#c4a882" stroke-width="2"/>
+        <text x="582" y="38" class="tbl-num">1</text>
+        <text x="582" y="58" class="tbl-count">8 pax</text>
+        <text x="582" y="85" class="tbl-label">Table 1</text>
+      </g>
+
+      <!-- Table 2 · mid right · 12 pax -->
+      <g class="tbl-rect" id="tbl-2" onclick="selectTable(2)">
+        <rect class="main" x="460" y="105" width="200" height="52" rx="4" fill="#f0e8db" stroke="#c4a882" stroke-width="2"/>
+        <text x="560" y="125" class="tbl-num">2</text>
+        <text x="560" y="145" class="tbl-count">12 pax</text>
+        <text x="560" y="172" class="tbl-label">Table 2</text>
+      </g>
+
+      <!-- Table 3 · top centre · 9 pax -->
+      <g class="tbl-rect" id="tbl-3" onclick="selectTable(3)">
+        <rect class="main" x="228" y="18" width="145" height="52" rx="4" fill="#f0e8db" stroke="#c4a882" stroke-width="2"/>
+        <text x="300" y="38" class="tbl-num">3</text>
+        <text x="300" y="58" class="tbl-count">9 pax</text>
+        <text x="300" y="85" class="tbl-label">Table 3</text>
+      </g>
+
+      <!-- Table 4 · left upper · 11 pax -->
+      <g class="tbl-rect" id="tbl-4" onclick="selectTable(4)">
+        <rect class="main" x="14" y="82" width="188" height="52" rx="4" fill="#f0e8db" stroke="#c4a882" stroke-width="2"/>
+        <text x="108" y="102" class="tbl-num">4</text>
+        <text x="108" y="122" class="tbl-count">11 pax</text>
+        <text x="108" y="150" class="tbl-label">Table 4</text>
+      </g>
+
+      <!-- Table 5 · left mid · 9 pax -->
+      <g class="tbl-rect" id="tbl-5" onclick="selectTable(5)">
+        <rect class="main" x="14" y="196" width="155" height="52" rx="4" fill="#f0e8db" stroke="#c4a882" stroke-width="2"/>
+        <text x="91" y="216" class="tbl-num">5</text>
+        <text x="91" y="236" class="tbl-count">9 pax</text>
+        <text x="91" y="263" class="tbl-label">Table 5</text>
+      </g>
+
+      <!-- Table 6 · bottom centre-left · vertical · 11 pax -->
+      <g class="tbl-rect" id="tbl-6" onclick="selectTable(6)">
+        <rect class="main" x="182" y="290" width="68" height="168" rx="4" fill="#f0e8db" stroke="#c4a882" stroke-width="2"/>
+        <text x="216" y="362" class="tbl-num">6</text>
+        <text x="216" y="386" class="tbl-count">11 pax</text>
+        <text x="216" y="473" class="tbl-label">Table 6</text>
+      </g>
+
+      <!-- Table 7 · centre · vertical · 9 pax -->
+      <g class="tbl-rect" id="tbl-7" onclick="selectTable(7)">
+        <rect class="main" x="318" y="165" width="68" height="148" rx="4" fill="#f0e8db" stroke="#c4a882" stroke-width="2"/>
+        <text x="352" y="230" class="tbl-num">7</text>
+        <text x="352" y="254" class="tbl-count">9 pax</text>
+        <text x="352" y="328" class="tbl-label">Table 7</text>
+      </g>
+
+      <!-- Table 8 · bottom far left · vertical · 9 pax -->
+      <g class="tbl-rect" id="tbl-8" onclick="selectTable(8)">
+        <rect class="main" x="20" y="308" width="68" height="150" rx="4" fill="#f0e8db" stroke="#c4a882" stroke-width="2"/>
+        <text x="54" y="375" class="tbl-num">8</text>
+        <text x="54" y="399" class="tbl-count">9 pax</text>
+        <text x="54" y="473" class="tbl-label">Table 8</text>
+      </g>
+    </svg>
+    <div style="font-size:11px;color:#bbb;text-align:center;">點擊桌子查看詳情 · Click a table to view details</div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="detail-panel">
+    <div id="panelHeader"></div>
+    <div class="panel-scroll" id="panelScroll">
+      <div class="panel-empty" id="panelEmpty">← 點選座位圖上的桌子<br>查看賓客與餐點</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const DATA = {"tables":{"2":[{"name":"Grace","room":301,"restriction":"","seat":"2-1","table":2,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Zauyah","room":210,"restriction":"Halal","seat":"2-10","table":2,"order":{}},{"name":"Sum","room":211,"restriction":"","seat":"2-11","table":2,"order":{}},{"name":"Richard","room":211,"restriction":"","seat":"2-12","table":2,"order":{}},{"name":"Kah Yee","room":301,"restriction":"No Beef","seat":"2-2","table":2,"order":{"appetizer":"Sinuglaw Tostada","pork":"Sizzling Sisig","beef":"","seafood":"","chicken":""}},{"name":"Ruz","room":303,"restriction":"Halal","seat":"2-3","table":2,"order":{}},{"name":"Ben","room":303,"restriction":"","seat":"2-4","table":2,"order":{"appetizer":"Fresh Sashimi","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Daeng","room":303,"restriction":"Hala/No Peanut","seat":"2-5","table":2,"order":{"appetizer":"Fresh Sashimi","pork":"","beef":"","seafood":"","chicken":""}},{"name":"May","room":309,"restriction":"No Coriander","seat":"2-6","table":2,"order":{}},{"name":"Jun Long","room":309,"restriction":"","seat":"2-7","table":2,"order":{}},{"name":"Susan","room":209,"restriction":"","seat":"2-8","table":2,"order":{"appetizer":"","pork":"","beef":"Beef Kare-Kare","seafood":"","chicken":""}},{"name":"Vincent","room":209,"restriction":"","seat":"2-9","table":2,"order":{"appetizer":"Visayan Island Ceviche","pork":"","beef":"","seafood":"Island Grilled Shrimp","chicken":"Chicken Inasal"}}],"6":[{"name":"Shu Huey","room":301,"restriction":"","seat":"6-1","table":6,"order":{}},{"name":"Simone","room":317,"restriction":"","seat":"6-10","table":6,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Su","room":317,"restriction":"","seat":"6-11","table":6,"order":{"appetizer":"Lumpia Shanghai","pork":"Crispy Pork Binagoongan","beef":"Beef Kare-Kare","seafood":"","chicken":""}},{"name":"Feng Ye","room":302,"restriction":"","seat":"6-2","table":6,"order":{}},{"name":"Annabel","room":302,"restriction":"","seat":"6-3","table":6,"order":{"appetizer":"Sinuglaw Tostada","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Apphia","room":302,"restriction":"","seat":"6-4","table":6,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Chalina","room":307,"restriction":"No Onion","seat":"6-5","table":6,"order":{}},{"name":"Julia","room":307,"restriction":"","seat":"6-6","table":6,"order":{}},{"name":"Po Han","room":310,"restriction":"","seat":"6-7","table":6,"order":{"appetizer":"Visayan Island Ceviche","pork":"Grilled Pork","beef":"","seafood":"","chicken":""}},{"name":"Ming King","room":310,"restriction":"","seat":"6-8","table":6,"order":{"appetizer":"","pork":"KBL Stew","beef":"Beef Kare-Kare","seafood":"Grilled Fish (Tuna Panga)","chicken":"Chicken Inasal"}},{"name":"Detoria","room":317,"restriction":"","seat":"6-9","table":6,"order":{"appetizer":"Lumpia Shanghai","pork":"Grilled Pork","beef":"Ribeye Steak","seafood":"","chicken":""}}],"1":[{"name":"Nelson","room":305,"restriction":"","seat":"1-1","table":1,"order":{}},{"name":"Marlene","room":305,"restriction":"Soft Diet","seat":"1-2","table":1,"order":{}},{"name":"Jason","room":315,"restriction":"","seat":"1-3","table":1,"order":{}},{"name":"Li Hwa","room":315,"restriction":"No Beef","seat":"1-4","table":1,"order":{}},{"name":"Pao Yu","room":103,"restriction":"","seat":"1-5","table":1,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Anne","room":103,"restriction":"No Seaweed/Shrimp","seat":"1-6","table":1,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Cathy","room":103,"restriction":"","seat":"1-7","table":1,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"Squid Adobo","chicken":""}},{"name":"Hui Sheng","room":103,"restriction":"","seat":"1-8","table":1,"order":{"appetizer":"Visayan Island Ceviche","pork":"Sizzling Sisig","beef":"Beef Kare-Kare","seafood":"","chicken":""}}],"8":[{"name":"Robert","room":306,"restriction":"","seat":"8-1","table":8,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"","chicken":"Chicken Inasal"}},{"name":"Daniel","room":306,"restriction":"","seat":"8-2","table":8,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Penny","room":308,"restriction":"","seat":"8-3","table":8,"order":{"appetizer":"Sinuglaw Tostada","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Kevin","room":308,"restriction":"","seat":"8-4","table":8,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"Beef Kare-Kare","seafood":"Grilled Fish (Tuna Panga)","chicken":"Native Chicken Tinola"}},{"name":"Alan","room":311,"restriction":"","seat":"8-5","table":8,"order":{"appetizer":"Lumpia Shanghai","pork":"Baked BBQ Ribs","beef":"Sizzling Beef Camsi","seafood":"Tuna Steak","chicken":"Family Fried Chicken"}},{"name":"Roller Coaster","room":311,"restriction":"","seat":"8-6","table":8,"order":{"appetizer":"Lumpia Shanghai","pork":"Grilled Pork","beef":"","seafood":"","chicken":""}},{"name":"Jun","room":311,"restriction":"","seat":"8-7","table":8,"order":{}},{"name":"Green","room":105,"restriction":"No Peanut","seat":"8-8","table":8,"order":{}},{"name":"James","room":105,"restriction":"","seat":"8-9","table":8,"order":{}}],"7":[{"name":"Steven","room":316,"restriction":"","seat":"7-1","table":7,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"","chicken":""}},{"name":"John","room":316,"restriction":"","seat":"7-2","table":7,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Tiffany","room":317,"restriction":"","seat":"7-3","table":7,"order":{}},{"name":"Chris","room":203,"restriction":"","seat":"7-4","table":7,"order":{"appetizer":"Fresh Sashimi","pork":"","beef":"Sizzling Beef Camsi","seafood":"","chicken":""}},{"name":"Jenny","room":203,"restriction":"","seat":"7-5","table":7,"order":{"appetizer":"Fresh Sashimi","pork":"","beef":"","seafood":"Squid Adobo","chicken":""}},{"name":"Andy","room":205,"restriction":"","seat":"7-6","table":7,"order":{"appetizer":"Fresh Sashimi","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Sarah","room":205,"restriction":"","seat":"7-7","table":7,"order":{}},{"name":"Ryder","room":206,"restriction":"","seat":"7-8","table":7,"order":{"appetizer":"Sinuglaw Tostada","pork":"Sizzling Sisig","beef":"","seafood":"","chicken":""}},{"name":"Kali","room":206,"restriction":"","seat":"7-9","table":7,"order":{"appetizer":"Sinuglaw Tostada","pork":"","beef":"","seafood":"","chicken":""}}],"4":[{"name":"Mahsiu","room":102,"restriction":"","seat":"4-1","table":4,"order":{"appetizer":"","pork":"","beef":"","seafood":"Grilled Fish (Tuna Belly)","chicken":"Chicken Inasal"}},{"name":"Lara","room":109,"restriction":"","seat":"4-10","table":4,"order":{"appetizer":"","pork":"","beef":"","seafood":"Grilled Fish (Blue Marlin Belly)","chicken":"Chicken Inasal"}},{"name":"Shubert","room":109,"restriction":"","seat":"4-11","table":4,"order":{}},{"name":"Erica","room":102,"restriction":"","seat":"4-2","table":4,"order":{"appetizer":"Fresh Sashimi","pork":"Sizzling Sisig","beef":"","seafood":"","chicken":""}},{"name":"Colbie (kid >5y/o)","room":102,"restriction":"","seat":"4-3","table":4,"order":{}},{"name":"MuMu (kid <5y/o)","room":102,"restriction":"Baby Food","seat":"4-4","table":4,"order":{}},{"name":"Max","room":106,"restriction":"","seat":"4-5","table":4,"order":{"appetizer":"Lumpia Shanghai","pork":"KBL Stew","beef":"","seafood":"","chicken":""}},{"name":"Rose","room":106,"restriction":"No Beef","seat":"4-6","table":4,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Nick","room":108,"restriction":"","seat":"4-7","table":4,"order":{"appetizer":"Sinuglaw Tostada","pork":"Crispy Pork Kare-Kare","beef":"","seafood":"","chicken":""}},{"name":"Vivian","room":108,"restriction":"","seat":"4-8","table":4,"order":{"appetizer":"Visayan Island Ceviche","pork":"","beef":"Beef Kare-Kare","seafood":"","chicken":""}},{"name":"Henry","room":109,"restriction":"","seat":"4-9","table":4,"order":{"appetizer":"Fresh Sashimi","pork":"","beef":"Sizzling Beef Camsi","seafood":"","chicken":""}}],"3":[{"name":"Motica","room":107,"restriction":"","seat":"3-1","table":3,"order":{"appetizer":"Fresh Sashimi","pork":"","beef":"Sizzling Beef Camsi","seafood":"Grilled Fish (Tuna Belly)","chicken":"Chicken Inasal"}},{"name":"Toy","room":107,"restriction":"","seat":"3-2","table":3,"order":{"appetizer":"Fresh Sashimi","pork":"Crispy Pork Binagoongan","beef":"Ribeye Steak","seafood":"","chicken":""}},{"name":"Paula","room":112,"restriction":"","seat":"3-3","table":3,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"Ribeye Steak","seafood":"","chicken":""}},{"name":"Paul","room":112,"restriction":"","seat":"3-4","table":3,"order":{"appetizer":"Sinuglaw Tostada","pork":"","beef":"Ribeye Steak","seafood":"Grilled Fish (Blue Marlin Belly)","chicken":"Family Fried Chicken"}},{"name":"Ivana (kid>5y/o)","room":112,"restriction":"","seat":"3-5","table":3,"order":{"appetizer":"Sinuglaw Tostada","pork":"","beef":"Ribeye Steak","seafood":"Grilled Fish (Blue Marlin Belly)","chicken":"Family Fried Chicken"}},{"name":"Jeremy","room":201,"restriction":"","seat":"3-6","table":3,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"Beef Kare-Kare","seafood":"","chicken":""}},{"name":"Judy","room":201,"restriction":"No Beef","seat":"3-7","table":3,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"Island Grilled Shrimp","chicken":"Family Fried Chicken"}},{"name":"Momo","room":202,"restriction":"","seat":"3-8","table":3,"order":{}},{"name":"Aimee","room":202,"restriction":"","seat":"3-9","table":3,"order":{"appetizer":"Sinuglaw Tostada","pork":"Grilled Pork","beef":"","seafood":"","chicken":""}}],"5":[{"name":"Terry","room":110,"restriction":"","seat":"5-1","table":5,"order":{"appetizer":"Visayan Island Ceviche","pork":"","beef":"","seafood":"Grilled Fish (Blue Marlin Belly)","chicken":""}},{"name":"Cindy","room":110,"restriction":"","seat":"5-2","table":5,"order":{"appetizer":"Fresh Sashimi","pork":"Grilled Pork","beef":"Beef Kare-Kare","seafood":"","chicken":""}},{"name":"Stella","room":207,"restriction":"","seat":"5-3","table":5,"order":{"appetizer":"Lumpia Shanghai","pork":"Baked BBQ Ribs","beef":"Ribeye Steak","seafood":"","chicken":""}},{"name":"Blake","room":207,"restriction":"","seat":"5-4","table":5,"order":{"appetizer":"","pork":"","beef":"Ribeye Steak","seafood":"Grilled Fish (Tuna Panga)","chicken":""}},{"name":"Mon Mon","room":207,"restriction":"","seat":"5-5","table":5,"order":{}},{"name":"Fahia","room":215,"restriction":"Halal","seat":"5-6","table":5,"order":{"appetizer":"Fresh Sashimi","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Brahim","room":215,"restriction":"Halal","seat":"5-7","table":5,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"Grilled Fish (Tuna Belly)","chicken":"Chicken Inasal"}},{"name":"Anna","room":216,"restriction":"","seat":"5-8","table":5,"order":{"appetizer":"Visayan Island Ceviche","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Riccardo","room":216,"restriction":"","seat":"5-9","table":5,"order":{"appetizer":"Fresh Sashimi","pork":"","beef":"","seafood":"Tuna Steak","chicken":""}}],"0":[{"name":"Annie","room":111,"restriction":"","seat":"0","table":0,"order":{}},{"name":"Bruce","room":111,"restriction":"","seat":"0","table":0,"order":{}}]}};
+
+const CAT_LABEL = { appetizer:'Appetizer', pork:'Pork', beef:'Beef', seafood:'Seafood', chicken:'Chicken' };
+const TABLE_NAMES = { 1:'Table 1', 2:'Table 2', 3:'Table 3', 4:'Table 4', 5:'Table 5', 6:'Table 6', 7:'Table 7', 8:'Table 8' };
+const TABLE_ORDER = [1,2,3,4,5,6,7,8];
+
+// Mutable order + lock state
+const tableOrder = {};
+const tableLocked = {};
+TABLE_ORDER.forEach(t => {
+  const g = DATA.tables[t] || [];
+  tableOrder[t] = g.map((_, i) => i);
+  tableLocked[t] = false;
+});
+
+let selectedTable = null;
+let dragSrcTable = null;
+let dragSrcIdx = null;
+
+function hasOrder(g) {
+  if (!g.order) return false;
+  return Object.values(g.order).some(v => v && v.trim());
+}
+
+// ── LEFT SIDEBAR ──────────────────────────────────────────────────
+function buildSidebar(filter) {
+  const el = document.getElementById('guestList');
+  el.innerHTML = '';
+  const q = (filter || '').toLowerCase();
+
+  TABLE_ORDER.forEach(t => {
+    const allGuests = DATA.tables[t] || [];
+    const orderedGuests = tableOrder[t].map(i => allGuests[i]);
+    const visible = q ? orderedGuests.filter(g => g.name.toLowerCase().includes(q)) : orderedGuests;
+    if (!visible.length) return;
+
+    const group = document.createElement('div');
+    group.className = 'table-group' + (tableLocked[t] ? ' locked-group' : '');
+    group.dataset.table = t;
+
+    // Header
+    const label = document.createElement('div');
+    label.className = 'table-group-label';
+    label.dataset.table = t;
+    label.innerHTML = `<span class="lbl-main">${TABLE_NAMES[t]} · <span style="color:#ccc">${allGuests.length} pax</span></span>`;
+    label.onclick = (e) => { if (!e.target.closest('.lock-btn')) selectTable(t); };
+    label.addEventListener('dragover', onLabelDragOver);
+    label.addEventListener('drop', onLabelDrop);
+
+    const lockBtn = document.createElement('button');
+    lockBtn.className = 'lock-btn' + (tableLocked[t] ? ' locked' : '');
+    lockBtn.title = tableLocked[t] ? 'Unlock order' : 'Lock order';
+    lockBtn.textContent = tableLocked[t] ? '🔒' : '🔓';
+    lockBtn.onclick = (e) => { e.stopPropagation(); toggleLock(t); };
+    label.appendChild(lockBtn);
+    group.appendChild(label);
+
+    // Guest items (only full list when no filter, to allow drag)
+    const listGuests = q ? visible : orderedGuests;
+    listGuests.forEach((g, localIdx) => {
+      if (q && !g.name.toLowerCase().includes(q)) return;
+      const item = document.createElement('div');
+      item.className = 'guest-item';
+      item.dataset.name = g.name;
+      item.dataset.localIdx = localIdx;
+      item.dataset.table = t;
+
+      const locked = tableLocked[t];
+      if (!locked && !q) {
+        item.draggable = true;
+        item.addEventListener('dragstart', onDragStart);
+        item.addEventListener('dragover', onDragOver);
+        item.addEventListener('drop', onDrop);
+        item.addEventListener('dragend', onDragEnd);
+      }
+
+      const hasDiet = g.restriction && g.restriction !== 'NA';
+      item.innerHTML = `
+        <span class="seat-num">${g.seat}</span>
+        ${hasDiet ? '<span class="restriction-dot"></span>' : '<span class="no-dot"></span>'}
+        ${g.name}
+      `;
+      item.onclick = () => { selectTable(t); };
+      group.appendChild(item);
+    });
+
+    el.appendChild(group);
+  });
+}
+
+function toggleLock(t) {
+  tableLocked[t] = !tableLocked[t];
+  buildSidebar(document.getElementById('search').value);
+  if (selectedTable == t) renderPanel(t);
+}
+
+// ── DRAG & DROP ────────────────────────────────────────────────────
+function onDragStart(e) {
+  dragSrcTable = parseInt(this.dataset.table);
+  dragSrcIdx = parseInt(this.dataset.localIdx);
+  this.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+function onDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+  this.classList.add('drag-over');
+}
+function onDrop(e) {
+  e.preventDefault();
+  document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+  const destTable = parseInt(this.dataset.table);
+  const destIdx = parseInt(this.dataset.localIdx);
+  if (destTable === dragSrcTable) {
+    if (dragSrcIdx === destIdx) return;
+    const order = tableOrder[dragSrcTable];
+    const [moved] = order.splice(dragSrcIdx, 1);
+    order.splice(destIdx, 0, moved);
+  } else {
+    if (tableLocked[dragSrcTable] || tableLocked[destTable]) return;
+    moveGuestBetweenTables(dragSrcTable, dragSrcIdx, destTable, destIdx);
+  }
+  buildSidebar(document.getElementById('search').value);
+  buildRoster();
+  if (selectedTable === destTable || selectedTable === dragSrcTable) renderPanel(selectedTable);
+}
+function onDragEnd() {
+  document.querySelectorAll('.guest-item.dragging').forEach(el => el.classList.remove('dragging'));
+  document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+}
+function onLabelDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+  const destTable = parseInt(this.dataset.table);
+  if (dragSrcTable !== null && !tableLocked[destTable] && destTable !== dragSrcTable) this.classList.add('drag-over');
+}
+function onLabelDrop(e) {
+  e.preventDefault();
+  this.classList.remove('drag-over');
+  const destTable = parseInt(this.dataset.table);
+  if (destTable === dragSrcTable || tableLocked[destTable] || tableLocked[dragSrcTable]) return;
+  moveGuestBetweenTables(dragSrcTable, dragSrcIdx, destTable, tableOrder[destTable].length);
+  buildSidebar(document.getElementById('search').value);
+  buildRoster();
+  if (selectedTable === destTable || selectedTable === dragSrcTable) renderPanel(selectedTable);
+}
+
+// ── MOVE GUEST BETWEEN TABLES ──────────────────────────────────────
+function moveGuestBetweenTables(srcTable, srcLocalIdx, destTable, destLocalIdx) {
+  const srcOrder = tableOrder[srcTable];
+  const dstOrder = tableOrder[destTable];
+  const srcArrayIdx = srcOrder[srcLocalIdx];
+  const guest = DATA.tables[srcTable][srcArrayIdx];
+  DATA.tables[srcTable].splice(srcArrayIdx, 1);
+  srcOrder.splice(srcLocalIdx, 1);
+  for (let i = 0; i < srcOrder.length; i++) { if (srcOrder[i] > srcArrayIdx) srcOrder[i]--; }
+  guest.table = destTable;
+  DATA.tables[destTable].push(guest);
+  dstOrder.splice(destLocalIdx, 0, DATA.tables[destTable].length - 1);
+}
+
+// ── ROSTER ─────────────────────────────────────────────────────────
+const rosterExtras = [];
+
+function buildRoster() {
+  const el = document.getElementById('rosterList');
+  el.innerHTML = '';
+  const all = [];
+  TABLE_ORDER.forEach(t => {
+    const guests = DATA.tables[t] || [];
+    tableOrder[t].forEach(i => { if (guests[i]) all.push({ name: guests[i].name, table: t }); });
+  });
+  all.sort((a, b) => a.name.localeCompare(b.name));
+  all.forEach(({ name, table }) => {
+    const item = document.createElement('div');
+    item.className = 'roster-item';
+    const safe = name.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    item.innerHTML = `<span class="rname">${name}</span><span class="tbl-badge">T${table}</span><button class="del-btn" onclick="deleteGuest('${safe}',${table})" title="Remove">×</button>`;
+    el.appendChild(item);
+  });
+  rosterExtras.forEach((name, idx) => {
+    const item = document.createElement('div');
+    item.className = 'roster-item unassigned';
+    item.innerHTML = `<span class="rname">${name}</span><span class="tbl-badge">—</span><button class="del-btn" onclick="deleteExtra(${idx})" title="Remove">×</button>`;
+    el.appendChild(item);
+  });
+}
+
+function addRosterGuest() {
+  const input = document.getElementById('rosterInput');
+  const name = input.value.trim();
+  if (!name) return;
+  rosterExtras.push(name);
+  input.value = '';
+  buildRoster();
+}
+
+function deleteGuest(name, table) {
+  const guests = DATA.tables[table];
+  if (!guests) return;
+  const arrayIdx = guests.findIndex(g => g.name === name);
+  if (arrayIdx === -1) return;
+  guests.splice(arrayIdx, 1);
+  const ord = tableOrder[table];
+  const pos = ord.indexOf(arrayIdx);
+  if (pos !== -1) ord.splice(pos, 1);
+  for (let i = 0; i < ord.length; i++) { if (ord[i] > arrayIdx) ord[i]--; }
+  buildSidebar(document.getElementById('search').value);
+  buildRoster();
+  if (selectedTable === table) renderPanel(table);
+}
+
+function deleteExtra(idx) {
+  rosterExtras.splice(idx, 1);
+  buildRoster();
+}
+
+// ── TABLE SELECT ───────────────────────────────────────────────────
+function selectTable(t) {
+  selectedTable = t;
+  document.querySelectorAll('.tbl-rect').forEach(el => {
+    el.querySelector('rect.main').style.fill = '#f0e8db';
+  });
+  const tblEl = document.getElementById('tbl-' + t);
+  if (tblEl) tblEl.querySelector('rect.main').style.fill = '#c4a882';
+  renderPanel(t);
+}
+
+// ── RIGHT PANEL ────────────────────────────────────────────────────
+function renderPanel(t) {
+  const allGuests = DATA.tables[t] || [];
+  const guests = tableOrder[t].map(i => allGuests[i]);
+  const locked = tableLocked[t];
+
+  const emptyEl = document.getElementById('panelEmpty');
+  if (emptyEl) emptyEl.style.display = 'none';
+  document.getElementById('panelHeader').innerHTML = `
+    <div class="panel-header">
+      <h2>${TABLE_NAMES[t]} ${locked ? '🔒' : ''}</h2>
+      <div class="meta">${guests.length} GUESTS · 8 MAY 2026</div>
+    </div>`;
+
+  const scroll = document.getElementById('panelScroll');
+  scroll.innerHTML = '';
+
+  // ── Section 1: Guest List ─────────────────────────────────────
+  const guestSection = document.createElement('div');
+  guestSection.innerHTML = '<div class="section-title">Guests</div>';
+
+  guests.forEach(g => {
+    const hasDiet = g.restriction && g.restriction !== 'NA';
+    const ordered = hasOrder(g);
+    const row = document.createElement('div');
+    row.className = 'guest-row';
+    row.innerHTML = `
+      <span class="gname">${g.name}</span>
+      ${hasDiet ? `<span class="diet-badge">⚠ ${g.restriction}</span>` : ''}
+      <span class="room-tag">Rm ${g.room}</span>
+      <span class="order-tick ${ordered ? 'has' : 'none'}" title="${ordered ? 'Has pre-order' : 'No pre-order'}">${ordered ? '✓' : '✗'}</span>
+    `;
+    guestSection.appendChild(row);
+  });
+  scroll.appendChild(guestSection);
+
+  // ── Section 2: Food Orders ────────────────────────────────────
+  const foodSection = document.createElement('div');
+  foodSection.innerHTML = '<div class="section-title">Food Orders</div>';
+
+  const orderedGuests = guests.filter(g => hasOrder(g));
+  if (!orderedGuests.length) {
+    foodSection.innerHTML += '<div style="padding:14px 18px;font-size:12px;color:#ccc;font-style:italic;">No pre-orders on file for this table</div>';
+  } else {
+    orderedGuests.forEach(g => {
+      const card = document.createElement('div');
+      card.className = 'food-card';
+      const rows = Object.entries(CAT_LABEL).map(([k, label]) => {
+        const val = g.order[k];
+        if (!val) return '';
+        return `<div class="food-row"><span class="food-cat">${label}</span><span class="food-val">${val}</span></div>`;
+      }).join('');
+      card.innerHTML = `<div class="fname">${g.name}</div>${rows}`;
+      foodSection.appendChild(card);
+    });
+  }
+  scroll.appendChild(foodSection);
+}
+
+// ── INIT ───────────────────────────────────────────────────────────
+buildSidebar('');
+buildRoster();
+document.getElementById('search').addEventListener('input', e => buildSidebar(e.target.value));
+document.getElementById('rosterInput').addEventListener('keydown', e => { if (e.key === 'Enter') addRosterGuest(); });
+</script>
+</body>
+</html>
