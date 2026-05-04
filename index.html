@@ -107,6 +107,7 @@ header span { font-size: 11px; opacity: 0.6; display: block; letter-spacing: 4px
   border-bottom: 1px solid #f0e8db;
   background: #fdf9f5;
   position: sticky; top: 0; z-index: 1;
+  display: flex; justify-content: space-between; align-items: center;
 }
 
 /* Guest rows (top half) */
@@ -255,10 +256,6 @@ header span { font-size: 11px; opacity: 0.6; display: block; letter-spacing: 4px
 <script>
 const DATA = {"tables":{"2":[{"name":"Grace","room":301,"restriction":"","seat":"2-1","table":2,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Zauyah","room":210,"restriction":"Halal","seat":"2-10","table":2,"order":{"appetizer":"Fresh Sashimi","pork":"","beef":"","seafood":"Grilled Fish (Tuna Belly)","chicken":""}},{"name":"Sum","room":211,"restriction":"","seat":"2-11","table":2,"order":{"appetizer":"","pork":"","beef":"","seafood":"","chicken":"Chicken Inasal"}},{"name":"Richard","room":211,"restriction":"","seat":"2-12","table":2,"order":{"appetizer":"","pork":"Sizzling Sisig","beef":"","seafood":"","chicken":""}},{"name":"Kah Yee","room":301,"restriction":"No Beef","seat":"2-2","table":2,"order":{"appetizer":"Sinuglaw Tostada","pork":"Sizzling Sisig","beef":"","seafood":"","chicken":""}},{"name":"Ruz","room":303,"restriction":"Halal","seat":"2-3","table":2,"order":{}},{"name":"Ben","room":303,"restriction":"","seat":"2-4","table":2,"order":{"appetizer":"Fresh Sashimi","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Daeng","room":303,"restriction":"Hala/No Peanut","seat":"2-5","table":2,"order":{"appetizer":"Fresh Sashimi","pork":"","beef":"","seafood":"","chicken":""}},{"name":"May","room":309,"restriction":"No Coriander","seat":"2-6","table":2,"order":{}},{"name":"Jun Long","room":309,"restriction":"","seat":"2-7","table":2,"order":{}},{"name":"Susan","room":209,"restriction":"","seat":"2-8","table":2,"order":{"appetizer":"","pork":"","beef":"Beef Kare-Kare","seafood":"","chicken":""}},{"name":"Vincent","room":209,"restriction":"","seat":"2-9","table":2,"order":{"appetizer":"Visayan Island Ceviche","pork":"","beef":"","seafood":"Island Grilled Shrimp","chicken":"Chicken Inasal"}}],"6":[{"name":"Shu Huey","room":301,"restriction":"","seat":"6-1","table":6,"order":{}},{"name":"Simone","room":317,"restriction":"","seat":"6-10","table":6,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Su","room":317,"restriction":"","seat":"6-11","table":6,"order":{"appetizer":"Lumpia Shanghai","pork":"Crispy Pork Binagoongan","beef":"Beef Kare-Kare","seafood":"","chicken":""}},{"name":"Feng Ye","room":302,"restriction":"","seat":"6-2","table":6,"order":{}},{"name":"Annabel","room":302,"restriction":"","seat":"6-3","table":6,"order":{"appetizer":"Sinuglaw Tostada","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Apphia","room":302,"restriction":"","seat":"6-4","table":6,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Chalina","room":307,"restriction":"No Onion","seat":"6-5","table":6,"order":{}},{"name":"Julia","room":307,"restriction":"","seat":"6-6","table":6,"order":{}},{"name":"Po Han","room":310,"restriction":"","seat":"6-7","table":6,"order":{"appetizer":"Fresh Sashimi","pork":"KBL Stew","beef":"","seafood":"","chicken":""}},{"name":"Po Han (2)","room":310,"restriction":"","seat":"6-7","table":6,"order":{"appetizer":"Visayan Island Ceviche","pork":"Grilled Pork","beef":"","seafood":"","chicken":""}},{"name":"Ming King","room":310,"restriction":"","seat":"6-8","table":6,"order":{"appetizer":"","pork":"KBL Stew","beef":"Beef Kare-Kare","seafood":"Grilled Fish (Tuna Belly)","chicken":"Chicken Inasal"}},{"name":"Detoria","room":317,"restriction":"","seat":"6-9","table":6,"order":{"appetizer":"Lumpia Shanghai","pork":"Grilled Pork","beef":"Ribeye Steak","seafood":"","chicken":""}}],"1":[{"name":"Nelson","room":305,"restriction":"","seat":"1-1","table":1,"order":{}},{"name":"Marlene","room":305,"restriction":"Soft Diet","seat":"1-2","table":1,"order":{}},{"name":"Jason","room":315,"restriction":"","seat":"1-3","table":1,"order":{}},{"name":"Li Hwa","room":315,"restriction":"No Beef","seat":"1-4","table":1,"order":{}},{"name":"Pao Yu","room":103,"restriction":"","seat":"1-5","table":1,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Anne","room":103,"restriction":"No Seaweed/Shrimp","seat":"1-6","table":1,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Cathy","room":103,"restriction":"","seat":"1-7","table":1,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"Squid Adobo","chicken":""}},{"name":"Hui Sheng","room":103,"restriction":"","seat":"1-8","table":1,"order":{"appetizer":"Visayan Island Ceviche","pork":"Sizzling Sisig","beef":"Beef Kare-Kare","seafood":"","chicken":""}}],"8":[{"name":"Robert","room":306,"restriction":"","seat":"8-1","table":8,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"","chicken":"Chicken Inasal"}},{"name":"Daniel","room":306,"restriction":"","seat":"8-2","table":8,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Penny","room":308,"restriction":"","seat":"8-3","table":8,"order":{"appetizer":"Sinuglaw Tostada","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Kevin","room":308,"restriction":"","seat":"8-4","table":8,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"Beef Kare-Kare","seafood":"Grilled Fish (Tuna Belly)","chicken":"Native Chicken Tinola"}},{"name":"Alan","room":311,"restriction":"","seat":"8-5","table":8,"order":{"appetizer":"Lumpia Shanghai","pork":"Baked BBQ Ribs","beef":"Sizzling Beef Camsi","seafood":"Tuna Steak","chicken":"Family Fried Chicken"}},{"name":"Roller Coaster","room":311,"restriction":"","seat":"8-6","table":8,"order":{"appetizer":"Lumpia Shanghai","pork":"Grilled Pork","beef":"","seafood":"","chicken":""}},{"name":"Jun","room":311,"restriction":"","seat":"8-7","table":8,"order":{}},{"name":"Green","room":105,"restriction":"No Peanut","seat":"8-8","table":8,"order":{}},{"name":"James","room":105,"restriction":"","seat":"8-9","table":8,"order":{}}],"7":[{"name":"Steven","room":316,"restriction":"","seat":"7-1","table":7,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"","chicken":""}},{"name":"John","room":316,"restriction":"","seat":"7-2","table":7,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Tiffany","room":317,"restriction":"","seat":"7-3","table":7,"order":{}},{"name":"Chris","room":203,"restriction":"","seat":"7-4","table":7,"order":{"appetizer":"Fresh Sashimi","pork":"","beef":"Sizzling Beef Camsi","seafood":"","chicken":""}},{"name":"Jenny","room":203,"restriction":"","seat":"7-5","table":7,"order":{"appetizer":"Fresh Sashimi","pork":"","beef":"","seafood":"Squid Adobo","chicken":""}},{"name":"Andy","room":205,"restriction":"","seat":"7-6","table":7,"order":{"appetizer":"Fresh Sashimi","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Sarah","room":205,"restriction":"","seat":"7-7","table":7,"order":{}},{"name":"Ryder","room":206,"restriction":"","seat":"7-8","table":7,"order":{"appetizer":"Sinuglaw Tostada","pork":"Sizzling Sisig","beef":"","seafood":"","chicken":""}},{"name":"Kali","room":206,"restriction":"","seat":"7-9","table":7,"order":{"appetizer":"Sinuglaw Tostada","pork":"","beef":"","seafood":"","chicken":""}}],"4":[{"name":"Mahsiu","room":102,"restriction":"","seat":"4-1","table":4,"order":{"appetizer":"","pork":"","beef":"","seafood":"Grilled Fish (Tuna Belly)","chicken":"Chicken Inasal"}},{"name":"Lara","room":109,"restriction":"","seat":"4-10","table":4,"order":{"appetizer":"","pork":"","beef":"","seafood":"Grilled Fish (Blue Marlin Belly)","chicken":"Chicken Inasal"}},{"name":"Shubert","room":109,"restriction":"","seat":"4-11","table":4,"order":{}},{"name":"Erica","room":102,"restriction":"","seat":"4-2","table":4,"order":{"appetizer":"Fresh Sashimi","pork":"Sizzling Sisig","beef":"","seafood":"","chicken":""}},{"name":"Colbie (kid >5y/o)","room":102,"restriction":"","seat":"4-3","table":4,"order":{}},{"name":"MuMu (kid <5y/o)","room":102,"restriction":"Baby Food","seat":"4-4","table":4,"order":{}},{"name":"Max","room":106,"restriction":"","seat":"4-5","table":4,"order":{"appetizer":"Lumpia Shanghai","pork":"KBL Stew","beef":"","seafood":"","chicken":""}},{"name":"Rose","room":106,"restriction":"No Beef","seat":"4-6","table":4,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Nick","room":108,"restriction":"","seat":"4-7","table":4,"order":{"appetizer":"Sinuglaw Tostada","pork":"Crispy Pork Kare-Kare","beef":"","seafood":"","chicken":""}},{"name":"Vivian","room":108,"restriction":"","seat":"4-8","table":4,"order":{"appetizer":"Visayan Island Ceviche","pork":"","beef":"Beef Kare-Kare","seafood":"","chicken":""}},{"name":"Henry","room":109,"restriction":"","seat":"4-9","table":4,"order":{"appetizer":"Fresh Sashimi","pork":"","beef":"Sizzling Beef Camsi","seafood":"","chicken":""}}],"3":[{"name":"Motica","room":107,"restriction":"","seat":"3-1","table":3,"order":{"appetizer":"Fresh Sashimi","pork":"","beef":"Sizzling Beef Camsi","seafood":"Grilled Fish (Tuna Belly)","chicken":"Chicken Inasal"}},{"name":"Toy","room":107,"restriction":"","seat":"3-2","table":3,"order":{"appetizer":"Fresh Sashimi","pork":"Crispy Pork Binagoongan","beef":"Ribeye Steak","seafood":"","chicken":""}},{"name":"Paula","room":112,"restriction":"","seat":"3-3","table":3,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"Ribeye Steak","seafood":"","chicken":""}},{"name":"Paul","room":112,"restriction":"","seat":"3-4","table":3,"order":{"appetizer":"Sinuglaw Tostada","pork":"","beef":"Ribeye Steak","seafood":"Grilled Fish (Blue Marlin Belly)","chicken":"Family Fried Chicken"}},{"name":"Ivana (kid>5y/o)","room":112,"restriction":"","seat":"3-5","table":3,"order":{}},{"name":"Jeremy","room":201,"restriction":"","seat":"3-6","table":3,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"Beef Kare-Kare","seafood":"","chicken":""}},{"name":"Judy","room":201,"restriction":"No Beef","seat":"3-7","table":3,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"Island Grilled Shrimp","chicken":"Family Fried Chicken"}},{"name":"Momo","room":202,"restriction":"","seat":"3-8","table":3,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"Island Grilled Shrimp","chicken":""}},{"name":"Aimee","room":202,"restriction":"","seat":"3-9","table":3,"order":{"appetizer":"Sinuglaw Tostada","pork":"Grilled Pork","beef":"","seafood":"","chicken":""}}],"5":[{"name":"Terry","room":110,"restriction":"","seat":"5-1","table":5,"order":{"appetizer":"Visayan Island Ceviche","pork":"","beef":"","seafood":"Grilled Fish (Blue Marlin Belly)","chicken":""}},{"name":"Cindy","room":110,"restriction":"","seat":"5-2","table":5,"order":{"appetizer":"Fresh Sashimi","pork":"Grilled Pork","beef":"Beef Kare-Kare","seafood":"","chicken":""}},{"name":"Stella","room":207,"restriction":"","seat":"5-3","table":5,"order":{"appetizer":"Lumpia Shanghai","pork":"Baked BBQ Ribs","beef":"Ribeye Steak","seafood":"","chicken":""}},{"name":"Blake","room":207,"restriction":"","seat":"5-4","table":5,"order":{"appetizer":"","pork":"","beef":"Ribeye Steak","seafood":"Grilled Fish (Tuna Belly)","chicken":""}},{"name":"Mon Mon","room":207,"restriction":"","seat":"5-5","table":5,"order":{}},{"name":"Fahia","room":215,"restriction":"Halal","seat":"5-6","table":5,"order":{"appetizer":"Fresh Sashimi","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Brahim","room":215,"restriction":"Halal","seat":"5-7","table":5,"order":{"appetizer":"Lumpia Shanghai","pork":"","beef":"","seafood":"Grilled Fish (Tuna Belly)","chicken":"Chicken Inasal"}},{"name":"Anna","room":216,"restriction":"","seat":"5-8","table":5,"order":{"appetizer":"Visayan Island Ceviche","pork":"","beef":"","seafood":"","chicken":""}},{"name":"Riccardo","room":216,"restriction":"","seat":"5-9","table":5,"order":{"appetizer":"Fresh Sashimi","pork":"","beef":"","seafood":"Tuna Steak","chicken":""}}],"0":[{"name":"Annie","room":111,"restriction":"","seat":"0","table":0,"order":{}},{"name":"Bruce","room":111,"restriction":"","seat":"0","table":0,"order":{}}]}};
 
-function escapeHTML(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
-
 const CAT_LABEL = { appetizer:'Appetizer', pork:'Pork', beef:'Beef', seafood:'Seafood', chicken:'Chicken' };
 const TABLE_NAMES = { 1:'Table 1', 2:'Table 2', 3:'Table 3', 4:'Table 4', 5:'Table 5', 6:'Table 6', 7:'Table 7', 8:'Table 8' };
 const TABLE_ORDER = [1,2,3,4,5,6,7,8];
@@ -335,9 +332,9 @@ function buildSidebar(filter) {
 
       const hasDiet = g.restriction && g.restriction !== 'NA';
       item.innerHTML = `
-        <span class="seat-num">${escapeHTML(g.seat)}</span>
+        <span class="seat-num">${g.seat}</span>
         ${hasDiet ? '<span class="restriction-dot"></span>' : '<span class="no-dot"></span>'}
-        ${escapeHTML(g.name)}
+        ${g.name}
       `;
       item.onclick = () => { selectTable(t); };
       group.appendChild(item);
@@ -435,25 +432,14 @@ function buildRoster() {
   all.forEach(({ name, table }) => {
     const item = document.createElement('div');
     item.className = 'roster-item';
-    item.innerHTML = `<span class="rname">${escapeHTML(name)}</span><span class="tbl-badge">T${table}</span>`;
-    const delBtn = document.createElement('button');
-    delBtn.className = 'del-btn';
-    delBtn.title = 'Remove';
-    delBtn.textContent = '×';
-    delBtn.addEventListener('click', () => deleteGuest(name, table));
-    item.appendChild(delBtn);
+    const safe = name.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    item.innerHTML = `<span class="rname">${name}</span><span class="tbl-badge">T${table}</span><button class="del-btn" onclick="deleteGuest('${safe}',${table})" title="Remove">×</button>`;
     el.appendChild(item);
   });
   rosterExtras.forEach((name, idx) => {
     const item = document.createElement('div');
     item.className = 'roster-item unassigned';
-    item.innerHTML = `<span class="rname">${escapeHTML(name)}</span><span class="tbl-badge">—</span>`;
-    const delBtn = document.createElement('button');
-    delBtn.className = 'del-btn';
-    delBtn.title = 'Remove';
-    delBtn.textContent = '×';
-    delBtn.addEventListener('click', () => deleteExtra(idx));
-    item.appendChild(delBtn);
+    item.innerHTML = `<span class="rname">${name}</span><span class="tbl-badge">—</span><button class="del-btn" onclick="deleteExtra(${idx})" title="Remove">×</button>`;
     el.appendChild(item);
   });
 }
@@ -528,9 +514,9 @@ function renderPanel(t) {
     const row = document.createElement('div');
     row.className = 'guest-row';
     row.innerHTML = `
-      <span class="gname">${escapeHTML(g.name)}</span>
-      ${hasDiet ? `<span class="diet-badge">⚠ ${escapeHTML(g.restriction)}</span>` : ''}
-      <span class="room-tag">Rm ${escapeHTML(g.room)}</span>
+      <span class="gname">${g.name}</span>
+      ${hasDiet ? `<span class="diet-badge">⚠ ${g.restriction}</span>` : ''}
+      <span class="room-tag">Rm ${g.room}</span>
       <span class="order-tick ${ordered ? 'has' : 'none'}" title="${ordered ? 'Has pre-order' : 'No pre-order'}">${ordered ? '✓' : '✗'}</span>
     `;
     guestSection.appendChild(row);
@@ -539,7 +525,7 @@ function renderPanel(t) {
 
   // ── Section 2: Food Orders ────────────────────────────────────
   const foodSection = document.createElement('div');
-  foodSection.innerHTML = '<div class="section-title">Food Orders</div>';
+  foodSection.innerHTML = `<div class="section-title">Food Orders<span>${TABLE_NAMES[t]}</span></div>`;
 
   const orderedGuests = guests.filter(g => hasOrder(g));
   if (!orderedGuests.length) {
@@ -551,9 +537,9 @@ function renderPanel(t) {
       const rows = Object.entries(CAT_LABEL).map(([k, label]) => {
         const val = g.order[k];
         if (!val) return '';
-        return `<div class="food-row"><span class="food-cat">${escapeHTML(label)}</span><span class="food-val">${escapeHTML(val)}</span></div>`;
+        return `<div class="food-row"><span class="food-cat">${label}</span><span class="food-val">${val}</span></div>`;
       }).join('');
-      card.innerHTML = `<div class="fname">${escapeHTML(g.name)}</div>${rows}`;
+      card.innerHTML = `<div class="fname">${g.name}</div>${rows}`;
       foodSection.appendChild(card);
     });
   }
@@ -577,8 +563,8 @@ function buildTablePageHTML(t) {
   });
 
   const guestListHTML = guests.map(g => {
-    const diet = g.restriction && g.restriction !== 'NA' ? ` <span class="diet">(${escapeHTML(g.restriction)})</span>` : '';
-    return `<li>${escapeHTML(g.name)}${diet}</li>`;
+    const diet = g.restriction && g.restriction !== 'NA' ? ` <span class="diet">(${g.restriction})</span>` : '';
+    return `<li>${g.name}${diet}</li>`;
   }).join('');
 
   let foodHTML = '';
@@ -587,7 +573,7 @@ function buildTablePageHTML(t) {
     if (!Object.keys(dishes).length) return;
     foodHTML += `<div class="cat-label">${label}</div>`;
     Object.entries(dishes).forEach(([dish, count]) => {
-      foodHTML += `<div class="dish-row"><span class="dish-name">${escapeHTML(dish)}</span>${count > 1 ? `<span class="count">×${count}</span>` : ''}</div>`;
+      foodHTML += `<div class="dish-row"><span class="dish-name">${dish}</span>${count > 1 ? `<span class="count">×${count}</span>` : ''}</div>`;
     });
   });
   if (!foodHTML) foodHTML = '<p class="none">No pre-orders on file.</p>';
@@ -627,7 +613,7 @@ function buildSummaryPageHTML() {
     grandTotal += catTotal;
     summaryHTML += `<div class="cat-label">${label} <span class="cat-total">(${catTotal})</span></div>`;
     entries.forEach(([dish, count]) => {
-      summaryHTML += `<div class="dish-row summary-row"><span class="dish-name">${escapeHTML(dish)}</span><span class="dish-count">${count}</span></div>`;
+      summaryHTML += `<div class="dish-row summary-row"><span class="dish-name">${dish}</span><span class="dish-count">${count}</span></div>`;
     });
   });
 
